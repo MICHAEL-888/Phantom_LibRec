@@ -7,6 +7,9 @@
     "zlib",
     "openssl",
     "curl",
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
   ]
 }
