@@ -1,0 +1,33 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "windows-static",
+      "displayName": "Windows MSVC static",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+        "VCPKG_HOST_TRIPLET": "x64-windows-static",
+        "LIBREC_ENABLE_DEPS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-static-release",
+      "configurePreset": "windows-static",
+      "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-static-release",
+      "configurePreset": "windows-static",
+      "configuration": "Release",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}

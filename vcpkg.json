@@ -1,0 +1,11 @@
+{
+  "name": "librec-static-demo",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "fmt",
+    "spdlog",
+    "zlib",
+    "openssl",
+    "curl"
+  ]
+}
