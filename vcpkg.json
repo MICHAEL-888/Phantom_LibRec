@@ -6,6 +6,7 @@
     "spdlog",
     "zlib",
     "openssl",
-    "curl"
+    "curl",
+    "qtbase"
   ]
 }
