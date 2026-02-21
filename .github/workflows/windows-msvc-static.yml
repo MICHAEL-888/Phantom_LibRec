@@ -37,6 +37,8 @@ jobs:
           -A x64
           -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}\scripts\buildsystems\vcpkg.cmake
           -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded$<$<CONFIG:Debug>:Debug>"
+          -DVCPKG_LIBRARY_LINKAGE=static
+          -DVCPKG_CRT_LINKAGE=static
           -DLIBREC_ENABLE_DEPS=ON
 
       - name: Build
@@ -48,5 +50,20 @@ jobs:
           name: windows-msvc-static-binaries
           path: |
             build/**/Release/*.exe
-            build/**/Release/*.dll
             build/**/Release/*.lib
+
+      - name: Fail if Release DLLs exist
+        shell: pwsh
+        run: |
+          $dlls = Get-ChildItem -Recurse -Path build -Filter *.dll -ErrorAction SilentlyContinue
+          if ($dlls.Count -gt 0) {
+            Write-Host "Found DLLs (expected fully static build):"
+            $dlls | ForEach-Object { Write-Host $_.FullName }
+            exit 1
+          }
+
+      - name: Upload Release PDBs
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-msvc-static-pdbs
+          path: build/**/Release/*.pdb

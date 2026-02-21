@@ -9,7 +9,11 @@
     "curl",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "thread",
+        "pcre2"
+      ]
     }
   ]
 }

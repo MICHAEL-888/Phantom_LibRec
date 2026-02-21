@@ -8,11 +8,22 @@ project(librec_static_demo LANGUAGES CXX)
 
 option(LIBREC_ENABLE_DEPS "Enable vcpkg dependencies" ON)
 
+set(BUILD_SHARED_LIBS OFF)
+set(OPENSSL_USE_STATIC_LIBS TRUE)
+set(CURL_USE_STATIC_LIBS TRUE)
+
 function(librec_setup_target target)
   target_compile_features(${target} PRIVATE cxx_std_17)
   if(MSVC)
     set_property(TARGET ${target} PROPERTY
       MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+    )
+    set_property(TARGET ${target} PROPERTY
+      MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Release,RelWithDebInfo>:ProgramDatabase>"
+    )
+    target_link_options(${target} PRIVATE
+      $<$<CONFIG:Release>:/DEBUG>
+      $<$<CONFIG:RelWithDebInfo>:/DEBUG>
     )
   endif()
 endfunction()
@@ -84,6 +95,9 @@ if(LIBREC_ENABLE_DEPS)
   librec_setup_target(librec_qt_demo)
   set_property(TARGET librec_qt_demo PROPERTY AUTOMOC ON)
   target_link_libraries(librec_qt_demo PRIVATE Qt6::Core)
+  if(MSVC)
+    target_compile_definitions(librec_qt_demo PRIVATE QT_STATIC)
+  endif()
 endif()
 
 install(TARGETS ${librec_targets} RUNTIME DESTINATION bin)
